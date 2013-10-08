@@ -30,9 +30,9 @@ var config=require('./config.js')(app,express,everyauth);
 
 var constants = require("./constants");
 
-var models = require("./models");
+var models = require("./models")(app.mongoose);
 
 require('./routes')(app, models);
 
-app.listen(3000);
-console.log("Listening on port 3000");
+app.listen(9898);
+console.log("Listening on port 9898");

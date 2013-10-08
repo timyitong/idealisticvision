@@ -4,7 +4,7 @@ module.exports = function(app, models){
     
     //index:
     app.get('/', function (req,res){
-        res.send("hello");
+        res.render("index.jade", {});
     });
 
     app.post('/login', function (req, res){
@@ -16,7 +16,7 @@ module.exports = function(app, models){
 
     app.get('/courses/:uid', function (req, res){
         var uid = req.params.uid;
-        models.CourseModel.findAll(function(err, courses){
+        models.CourseModel.find().exec(function(err, courses){
             if (!err){
                 res.send(courses);
             }else{
@@ -25,9 +25,27 @@ module.exports = function(app, models){
         }); 
     });
 
+    app.post('/courses', function (req, res){
+        var course = new models.CourseModel({
+            name: req.body.name
+        });
+        course.save();
+        res.send("success");
+    });
+
+    app.post('/presentations', function (req, res){
+        var presentation = new models.PresentationModel({
+            title: req.body.title,
+            content: req.body.content,
+            cid: ObjectId(req.body.cid)
+        });
+        presentation.save();
+        res.send("success");
+    });
+
     app.get('/courses/presentations/:cid', function (req, res){
         var cid = req.params.cid;
-        models.PresentationModel.find({cid: ObjectId(cid)},\
+        models.PresentationModel.find({cid: ObjectId(cid)},
         function (err, presentations){
             if (!err){
                 res.send(presentations);
