@@ -1,0 +1,18 @@
+{
+  "name": "application-dio",
+  "description": "made by timyitong",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express"   :   "3.x",
+    "jade"      :   ">= 0.0.1",
+    "mongodb"   :   ">=0.9.6",
+    "mongoose"  :   ">=2.5.10",
+    "imagemagick":  ">=0.0.1",
+    "fs"        :   ">=0.0.0",
+    "path"      :   ">=0.0.1",
+    "bcrypt"    :   ">=0.0.1",
+    "moment"  : ">=1.7.0",
+    "everyauth" : ">=0.0.1"
+  }
+}
