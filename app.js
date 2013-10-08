@@ -30,6 +30,8 @@ var config=require('./config.js')(app,express,everyauth);
 
 var constants = require("./constants");
 
+var models = require("./models");
+
 require('./routes')(app, models);
 
 app.listen(3000);

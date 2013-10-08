@@ -18,7 +18,7 @@ module.exports = function(app, express,everyauth){
     })
 
     /*DB part:*/
-    app.mongoose.connect('mongodb://localhost/dio_database')
+    app.mongoose.connect('mongodb://localhost/ideal_database')
 
     return config
 }
