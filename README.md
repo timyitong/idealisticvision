@@ -1,4 +1,4 @@
-<h3> A Pseudo Backend for the PivotCommEff </h3>
+<h3> A Pseudo Backend for the CommEffPivot </h3>
 
 <strong> Usage: </strong> <br>
 The server is deloyed at <a ref="http://106.187.92.216:9898">http://106.187.92.216:9898</a> <br>
