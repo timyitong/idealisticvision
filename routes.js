@@ -37,7 +37,8 @@ module.exports = function(app, models){
         var presentation = new models.PresentationModel({
             title: req.body.title,
             content: req.body.content,
-            cid: ObjectId(req.body.cid)
+            cid: ObjectId(req.body.cid),
+            type: req.body.ptype
         });
         presentation.save();
         res.send("success");
@@ -49,6 +50,52 @@ module.exports = function(app, models){
         function (err, presentations){
             if (!err){
                 res.send(presentations);
+            }else{
+                res.send("error");
+            }
+        });
+    });
+
+    app.post('/questions/:presentationID', function(req, res){
+        var pid = req.params.presentationID;
+        var question = new models.QuestionModel({
+            number: req.body.number,
+            presentationID: ObjectId(pid),
+            title: req.body.title,
+            selections: req.body.selections,
+        });
+        question.save();
+        res.send("success");
+    });
+
+    app.get('/questions/:presentationID', function(req, res){
+        var pid = req.params.presentationID;
+        models.QuestionModel.find({presentationID: ObjectId(pid)}).sort("number")
+        .exec(function (err, questions){
+            if (!err){
+                res.send(questions);
+            }else{
+                res.send("error");
+            }
+        });
+    });
+
+    app.post('/answers', function (req, res){
+        var ans = new models.AnswerModel({
+            presentationID: ObjectId(req.body.presentationID),
+            questionID: ObjectId(req.body.questionID),
+            selection: req.body.selectedNum,
+            userID: req.body.uid,
+        });
+        ans.save();
+        res.send("success");
+    });
+
+    app.get('/answers/:presentationID', function (req, res){
+        var pid = req.params.presentationID;
+        models.AnswerModel.find({presentationID: ObjectId(pid)}, function(err, answers){
+            if (!err){
+                res.send(answers);
             }else{
                 res.send("error");
             }
