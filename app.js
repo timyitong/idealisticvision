@@ -1,13 +1,15 @@
 var everyauth =  require('everyauth')
 var express = require('express')
 var app=express()
+var orm = require('orm');
+var Sequelize = require("sequelize");
 app.bcrypt = require('bcrypt')
 app.im=require('imagemagick')
 app.fs=require('fs')
 app.application_root = __dirname
-app.__SITE__="http://localhost:3000"
+app.__SITE__="http://localhost:9898"
 app.path = require("path")
-app.mongoose = require("mongoose")
+app.mongoose = require("mongoose");
 app.moment = require('moment')
 app.moment.relativeTime={
     future: "in %s",
@@ -25,10 +27,17 @@ app.moment.relativeTime={
     y: "1 year",
     yy: "%d years"
 }
+// Squelize
+app.sequelize = new Sequelize('mysql://root:1989@localhost/aaa', {
+    dialect: 'mysql',    
+});
+app.models = require("./mysql_models")(app, Sequelize);
 
 var config=require('./config.js')(app,express,everyauth);
 
 var constants = require("./constants");
+
+var orm = require("orm");
 
 var models = require("./models")(app.mongoose);
 

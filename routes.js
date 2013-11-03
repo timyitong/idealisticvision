@@ -7,6 +7,11 @@ module.exports = function(app, models){
         res.render("index.jade", {});
     });
 
+    app.get('/users', function (req, res){
+        var users = req.models.users.find();
+        res.send(users);
+    });
+
     app.post('/login', function (req, res){
         if (req.body.password == '111')
             res.send("0");
