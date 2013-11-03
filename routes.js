@@ -1,15 +1,27 @@
 module.exports = function(app, models){
     // Lib:
     var ObjectId = app.mongoose.Types.ObjectId;
-    
+
+    // Puri
+    function purify(obj, keys) {
+      return obj.map(function(row) {
+        var result = {};
+        keys.forEach(function(key) {
+          result[key] = row[key];
+        });
+        return result;
+      });
+    }    
+
     //index:
     app.get('/', function (req,res){
         res.render("index.jade", {});
     });
 
     app.get('/users', function (req, res){
-        var users = req.models.users.find();
-        res.send(users);
+        app.models.users.findAll().success(function(users){
+            res.send(users);
+        }); 
     });
 
     app.post('/login', function (req, res){

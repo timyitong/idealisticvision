@@ -1,7 +1,6 @@
 var everyauth =  require('everyauth')
 var express = require('express')
 var app=express()
-var orm = require('orm');
 var Sequelize = require("sequelize");
 app.bcrypt = require('bcrypt')
 app.im=require('imagemagick')
@@ -36,8 +35,6 @@ app.models = require("./mysql_models")(app, Sequelize);
 var config=require('./config.js')(app,express,everyauth);
 
 var constants = require("./constants");
-
-var orm = require("orm");
 
 var models = require("./models")(app.mongoose);
 
