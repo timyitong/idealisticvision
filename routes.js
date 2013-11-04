@@ -2,17 +2,6 @@ module.exports = function(app, models){
     // Lib:
     var ObjectId = app.mongoose.Types.ObjectId;
 
-    // Puri
-    function purify(obj, keys) {
-      return obj.map(function(row) {
-        var result = {};
-        keys.forEach(function(key) {
-          result[key] = row[key];
-        });
-        return result;
-      });
-    }    
-
     //index:
     app.get('/', function (req,res){
         res.render("index.jade", {});
@@ -24,97 +13,110 @@ module.exports = function(app, models){
         }); 
     });
 
+    app.post('/signup', function (req, res){
+        app.bcrypt.genSalt(10, function(err, salt) {
+            var user = app.models.users.build(
+                      {username     : req.body.username,
+                       password     : app.bcrypt.hashSync(req.body.password, salt),
+                       type         : req.body.usertype,
+                      }
+                );
+            user.save()
+                .success(function(result){
+                    res.send("success");
+                }).error(function(result){
+                    res.send(result);
+                });
+        });        
+    }); 
+
     app.post('/login', function (req, res){
-        if (req.body.password == '111')
-            res.send("0");
-        else
-            res.send("1");
+        app.models.users.find({where:{uid:req.body.username}})
+           .success(function(user){
+               if (app.bcrypt.compareSync(req.body.password, user.password)){
+                   res.send("success");
+               }else{
+                   res.send("fail");
+               }
+           }).error(function(err){
+               res.send("fail");
+           });
     });
 
     app.get('/courses/:uid', function (req, res){
         var uid = req.params.uid;
-        models.CourseModel.find().exec(function(err, courses){
-            if (!err){
+        app.models.users.find({where: {uid:uid}}).success(function(user){
+            user.getCourses().success(function(courses){
                 res.send(courses);
-            }else{
-                res.send("error");
-            }
-        }); 
+            });
+        });
+    });
+
+    app.post('/courses/enroll', function (req, res){
+        var uid = req.body.uid;
+        var cid = req.body.cid;
+        app.models.course_list.build({uid:uid, cid:cid})
+            .save()
+            .success(function(result){
+                res.send("success");
+            }).error(function(result){
+                res.send(result);
+            });
+    });
+
+    app.get('/courses', function(req, res){
+        app.models.courses.findAll().success(function(courses){
+            res.send(courses);
+        }).error(function(err){
+            res.send(err);
+        });
     });
 
     app.post('/courses', function (req, res){
-        var course = new models.CourseModel({
-            name: req.body.name
+        app.models.courses.build({
+            name : req.body.name,
+        }).save().success(function(result){
+            res.send("success");
+        }).error(function(result){
+            res.send("fail");
         });
-        course.save();
-        res.send("success");
     });
 
     app.post('/presentations', function (req, res){
-        var presentation = new models.PresentationModel({
-            title: req.body.title,
-            content: req.body.content,
-            cid: ObjectId(req.body.cid),
-            type: req.body.ptype
+        app.models.presentations.build({
+            pid : req.body.pid,
+            name : req.body.name,
+        }).save().success(function(presentation){
+            app.models.courses.find({where:{cid:req.body.cid}})
+                .success(function(course){
+                    course.addPresentation(presentation);
+                    res.send("success");
+                }).error(function(result){
+                    res.send(result);
+                });
+        }).error(function(result){
+            res.send(result);
         });
-        presentation.save();
-        res.send("success");
     });
 
     app.get('/courses/presentations/:cid', function (req, res){
         var cid = req.params.cid;
-        models.PresentationModel.find({cid: ObjectId(cid)},
-        function (err, presentations){
-            if (!err){
+        app.models.courses.find({where: {cid:cid}}).success(function(course){
+            course.getPresentations().success(function(presentations){
                 res.send(presentations);
+            });
+        });
+    });
+
+    app.get('/questions/:slideID', function(req, res){
+        var sid = req.params.slideID;
+        app.models.find({where:{sid:sid}}).success(function(slide){
+            if (slide.type == 'q'){
+                slide.getQuestions().success(function(questions){
+                    res.send(questions);
+                });
             }else{
-                res.send("error");
-            }
-        });
-    });
-
-    app.post('/questions/:presentationID', function(req, res){
-        var pid = req.params.presentationID;
-        var question = new models.QuestionModel({
-            number: req.body.number,
-            presentationID: ObjectId(pid),
-            title: req.body.title,
-            selections: req.body.selections,
-        });
-        question.save();
-        res.send("success");
-    });
-
-    app.get('/questions/:presentationID', function(req, res){
-        var pid = req.params.presentationID;
-        models.QuestionModel.find({presentationID: ObjectId(pid)}).sort("number")
-        .exec(function (err, questions){
-            if (!err){
-                res.send(questions);
-            }else{
-                res.send("error");
-            }
-        });
-    });
-
-    app.post('/answers', function (req, res){
-        var ans = new models.AnswerModel({
-            presentationID: ObjectId(req.body.presentationID),
-            questionID: ObjectId(req.body.questionID),
-            selection: req.body.selectedNum,
-            userID: req.body.uid,
-        });
-        ans.save();
-        res.send("success");
-    });
-
-    app.get('/answers/:presentationID', function (req, res){
-        var pid = req.params.presentationID;
-        models.AnswerModel.find({presentationID: ObjectId(pid)}, function(err, answers){
-            if (!err){
-                res.send(answers);
-            }else{
-                res.send("error");
+                res.send({});
             }
         });
     });

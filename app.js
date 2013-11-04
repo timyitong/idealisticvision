@@ -2,7 +2,8 @@ var everyauth =  require('everyauth')
 var express = require('express')
 var app=express()
 var Sequelize = require("sequelize");
-app.bcrypt = require('bcrypt')
+app.bcrypt = require('bcrypt');
+app.salt   = "haha";
 app.im=require('imagemagick')
 app.fs=require('fs')
 app.application_root = __dirname
@@ -29,6 +30,11 @@ app.moment.relativeTime={
 // Squelize
 app.sequelize = new Sequelize('mysql://root:1989@localhost/aaa', {
     dialect: 'mysql',    
+    omitNull: true,
+    define: {timestamps: false,
+             syncOnAssociation: true,
+    },
+    sync: { force: true },
 });
 app.models = require("./mysql_models")(app, Sequelize);
 
