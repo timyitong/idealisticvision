@@ -9,6 +9,13 @@ app.__SITE__="http://localhost:3000"
 app.path = require("path")
 app.mongoose = require("mongoose")
 app.moment = require('moment')
+var Pusher = require('pusher');
+app.pusher = new Pusher({
+  appId: '57457',
+  key: '5d619a48dbd0465163f0',
+  secret: '3ae7459db7282cc4c6cf'
+});
+
 app.moment.relativeTime={
     future: "in %s",
     past: "%s ago",
@@ -33,6 +40,8 @@ var constants = require("./constants");
 var models = require("./models")(app.mongoose);
 
 require('./routes')(app, models);
+
+require("./channels")(app, models);
 
 app.listen(9898);
 console.log("Listening on port 9898");

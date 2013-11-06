@@ -3,5 +3,34 @@ html
     head
         title Ideadlistic Vision
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+        script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
+        script(type = "text/javascript")
+            $(function(){
+                Pusher.log = function(message) {
+                  if (window.console && window.console.log) {
+                    window.console.log(message);
+                  }
+                };
+
+                var pusher = new Pusher('5d619a48dbd0465163f0');
+                var channel = pusher.subscribe('test_channel');
+                channel.bind('test_event', function(data) {
+                    alert(data.message);
+                }); 
+
+                $("#test_btn").click(function(){
+                    $.ajax({
+                        url: '/test_channel',
+                        type: 'GET',
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    });
+                });
+            });
     body
-        div hello
+        a(id = "test_btn", href="javascript:void(0);") test
+        ul
+            each p in presentations
+                li
+                    a(href = "/presentations/#{p._id}/show") #{p.title}

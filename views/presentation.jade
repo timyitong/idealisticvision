@@ -1,0 +1,62 @@
+!!!
+html
+    head
+        title Ideadlistic Vision
+        style.
+            ul{
+                list-style-type: none;
+            }
+            li{
+                list-style-type: none;
+            }
+            .slide{
+                border: 1px black solid;
+                margin: 5px;
+            }
+        script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+        script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
+        script(type = "text/javascript")
+            var current_index = 0;
+            var start = 0;
+            var presentationID = "#{presentationID}";
+            var end = #{slides.length};
+            function show_slide(index){
+                if (index < end && index >= start){
+                    $.ajax({
+                        url: '/presentations/'+presentationID+'/show/moveto/'+current_index,
+                        type: 'GET',
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    });
+                }
+            }
+            $(function(){
+                $("#next_btn").click(function(){
+                    if (current_index < end-1){
+                        current_index ++;
+                        show_slide(current_index);
+                        $("#current_index").text(current_index);
+                    }
+                });
+
+                $("#prev_btn").click(function(){
+                    if (current_index > 0){
+                        current_index --;
+                        $("#current_index").text(current_index);
+                        show_slide(current_index);
+                    }
+                });
+                show_slide(0);
+            });
+    body
+        h4 current slide:
+        div(id = "current_index") 0
+        a(id = "next_btn", href = "javascript:void(0);") next
+        br
+        a(id = "prev_btn", href = "javascript:void(0);") prev
+        ul
+            each slide in slides
+                li(class = "slide") 
+                    span #{slide.title}  
+                    p #{slide.content}      

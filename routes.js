@@ -4,7 +4,9 @@ module.exports = function(app, models){
     
     //index:
     app.get('/', function (req,res){
-        res.render("index.jade", {});
+        models.PresentationModel.find(function (err, presentations){
+            res.render("index.jade", {presentations: presentations});
+        })
     });
 
     app.post('/login', function (req, res){
@@ -99,9 +101,9 @@ module.exports = function(app, models){
         });
     });
 
-    app.get('/presentations/:pid/slides', function (req, res)){
+    app.get('/presentations/:pid/slides', function (req, res){
         var pid = req.params.pid;
-        model.SlideModel.find({presentationID: ObjectId(pid)},
+        models.SlideModel.find({presentationID: ObjectId(pid)},
         function (err, slides){
             if (!err){
                 res.send(slides);
@@ -110,6 +112,28 @@ module.exports = function(app, models){
                 res.send("error");
             }
         });
+    });
+
+    app.get('/presentations/:pid/show', function (req, res){
+        var pid = req.params.pid;
+        models.SlideModel.find({presentationID: ObjectId(pid)},
+        function (err, slides){
+            if (!err){
+                res.render("presentation.jade", {presentationID: pid, slides: slides});
+            }else{
+                console.log(err);
+                res.send("error");
+            }
+        });
+    });
+
+    app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
+        var pid = req.params.pid;
+        var slideIndex = req.params.sindex;
+        app.pusher.trigger('presentation_channel_'+pid, 'slide_event', {
+            index : slideIndex,
+        });
+        console.log("triggered");
     });
 
     app.post('/questions/:presentationID', function(req, res){
@@ -155,6 +179,13 @@ module.exports = function(app, models){
             }else{
                 res.send("error");
             }
+        });
+    });
+
+    // Channels
+    app.get('/test_channel', function (req, res){
+        app.pusher.trigger('test_channel', 'test_event', {
+            message : "hello world",
         });
     });
 }
