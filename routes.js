@@ -56,6 +56,62 @@ module.exports = function(app, models){
         });
     });
 
+    app.post('/presentations/slides', function (req, res){
+        var slide = new models.SlideModel({
+            presentationID: ObjectId(req.body.pid),
+            index: req.body.index,
+            type:  req.body.type,
+            title: req.body.title,
+            content: req.body.content,
+        });
+        slide.save(function(err){
+            if (!err){
+                res.send("success");
+            }else{
+                console.log(err);
+                res.send("error");
+            }
+        });
+    });
+
+    app.get('/slides/:sid', function (req, res){
+        var sid = req.params.sid;
+        model.SlideModel.findOne({_id : ObjectId(sid)},
+        function (err, slide){
+            if (!err){
+                res.send(slide);
+            }else{
+                res.send("error");
+            }
+        });
+    });
+
+    app.get('/presentations/:pid', function (req, res){
+        var pid = req.params.pid;
+        model.PresentationModel.findOne({presentationID: ObjectId(pid)},
+        function (err, presentation){
+            if (!err){
+                res.send(presentation);
+            }else{
+                console.log(err);
+                res.send("error");
+            }
+        });
+    });
+
+    app.get('/presentations/:pid/slides', function (req, res)){
+        var pid = req.params.pid;
+        model.SlideModel.find({presentationID: ObjectId(pid)},
+        function (err, slides){
+            if (!err){
+                res.send(slides);
+            }else{
+                console.log(err);
+                res.send("error");
+            }
+        });
+    });
+
     app.post('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
         var question = new models.QuestionModel({

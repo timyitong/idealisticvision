@@ -16,14 +16,25 @@ module.exports = function(mongoose){
         title:   String,
         type: String,
         content: String,
-        ctime: {type:Date, default:Date.now}
+        ctime: {type: Date, default: Date.now}
     });
     this.PresentationModel = mongoose.model('Presentation', Presentation);
+
+// Slide
+    var Slide = new Schema({
+        presentationID: ObjectId,
+        index: Number,
+        title: String,
+        type: String,
+        content: String,
+        ctime: {type: Date, default: Date.now},
+    });
+    this.SlideModel = mongoose.model('Slide', Slide);
 
 //Question:
     var Question = new Schema({
         number: Number,
-        presentationID: ObjectId,
+        slideID: ObjectId,
         title: String,
         selections: [String],
         ctime: {type:Date, default:Date.now}
@@ -32,7 +43,7 @@ module.exports = function(mongoose){
 
 // Answer:
     var Answer = new Schema({
-        presentationID: ObjectId,
+        slideID: ObjectId,
         questionID: ObjectId,
         selection: Number,
         userID: ObjectId,
