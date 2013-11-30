@@ -9,6 +9,12 @@ app.__SITE__="http://localhost:3000"
 app.path = require("path")
 app.mongoose = require("mongoose")
 app.moment = require('moment')
+app.redis = require('redis');
+app.redis_client = app.redis.createClient();
+app.redis_client.on("error", function (err) {
+        console.log("Error " + err);
+});
+
 var Pusher = require('pusher');
 app.pusher = new Pusher({
   appId: '57457',

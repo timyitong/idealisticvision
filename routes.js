@@ -184,6 +184,19 @@ module.exports = function(app, models){
         console.log("test_event triggered");
     });
 
+    // Test Redis
+    app.get('/test_redis', function (req, res){
+        client.mset("a", 100, "b", 200, app.redis.print);
+        client.mget("a", "b", function(err, replies){
+            if (err){
+                console.log(err);
+                res.send("error");
+            }else{
+                res.send(replies);
+            }
+        });
+    });
+
     // Presentation Channel
     app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
         var pid = req.params.pid;
