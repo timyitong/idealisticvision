@@ -234,7 +234,8 @@ module.exports = function(app, models){
             if (!err){
                 count = {};
                 count[0] = 0;
-                for each (var ans in answers){
+                for (var i = 0; i < answers.length; i++){
+                    var ans = answers[i];
                     if (ans.selection in count){
                         count[ans.selection] += 1;
                     }else{
