@@ -33,11 +33,14 @@ module.exports = function(mongoose){
 
 //Question:
     var Question = new Schema({
-        number: Number,
+        presentationID: ObjectId,
+        index: Number,
         slideID: ObjectId,
         title: String,
         selections: [String],
-        ctime: {type:Date, default:Date.now}
+        answer: Number,
+        timeup: {type: Number, default: 15},
+        ctime: {type: Date, default: Date.now}
     });
     this.QuestionModel = mongoose.model('Question', Question);
 

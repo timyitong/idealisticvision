@@ -130,10 +130,12 @@ module.exports = function(app, models){
     app.post('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
         var question = new models.QuestionModel({
-            number: req.body.number,
+            presentationID: ObjectId(pid),
+            index: req.body.number,
             presentationID: ObjectId(pid),
             title: req.body.title,
             selections: req.body.selections,
+            answer: req.body.answer,
         });
         question.save();
         res.send("success");
@@ -141,7 +143,7 @@ module.exports = function(app, models){
 
     app.get('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
-        models.QuestionModel.find({presentationID: ObjectId(pid)}).sort("number")
+        models.QuestionModel.find({presentationID: ObjectId(pid)}).sort("index")
         .exec(function (err, questions){
             if (!err){
                 res.send(questions);
@@ -182,7 +184,7 @@ module.exports = function(app, models){
         console.log("test_event triggered");
     });
 
-    // presentation channel
+    // Presentation Channel
     app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
         var pid = req.params.pid;
         var slideIndex = req.params.sindex;
@@ -192,5 +194,29 @@ module.exports = function(app, models){
         });
         res.send("received");
         console.log("triggered");
+    });
+
+    app.get('/presentations/:pid/activate/:sindex', function (req, res){
+        var pid = req.params.pid;
+        var sindex = req.params.sindex;
+        app.pusher.trigger('presentation_channel_'+pid, 'slide_status_event', {
+            active : true,
+            index : sindex,
+            ctime : new Date(),
+        });
+    });
+
+    app.get('/presentations/:pid/deactivate/:sindex', function (req, res){
+        var pid = req.params.pid;
+        var sindex = req.params.sindex;
+        app.pusher.trigger('presentation_channel_'+pid, 'slide_status_event', {
+            active : false,
+            index : sindex,
+            ctime : new Date().
+        });
+    });
+
+    app.get('/presentations/:pid/statistics/:sindex', function (req, res){
+
     });
 }
