@@ -154,8 +154,8 @@ module.exports = function(app, models){
     });
 
     app.post('/answers', function (req, res){
+        var selectedNum = req.body.selectedNum;
         var ans = new models.AnswerModel({
-            presentationID: ObjectId(req.body.presentationID),
             questionID: ObjectId(req.body.questionID),
             selection: req.body.selectedNum,
             userID: req.body.uid,
@@ -228,7 +228,28 @@ module.exports = function(app, models){
             ctime : new Date()});
     });
 
-    app.get('/presentations/:pid/statistics/:sindex', function (req, res){
-
+    app.get('/questions/:qid/show_stats', function (req, res){
+        var qid = req.params.qid;
+        models.AnswerModel.find({questionID: qid}, function(err, answers){
+            if (!err){
+                count = {};
+                count[0] = 0;
+                for each (var ans in answers){
+                    if (ans.selection in count){
+                        count[ans.selection] += 1;
+                    }else{
+                        count[ans.selection] = 1;
+                    }
+                    count[0] += 1;
+                }
+                app.pusher.trigger('presentation_channel_'+qid, 'question_stats_event', {
+                    questionID : qid,
+                    count: count,
+                });
+            }else{
+                console.log(err);
+                res.send("error");
+            }
+        });
     });
 }
