@@ -246,7 +246,8 @@ module.exports = function(app, models){
         res.send("sent");
     });
 
-    app.get('/questions/:qid/show_stats', function (req, res){
+    app.get('presentations/:presentationID/questions/:qid/show_stats', function (req, res){
+        var presentationID = req.params.presentationID;
         var qid = req.params.qid;
         models.AnswerModel.find({questionID: qid}, function(err, answers){
             if (!err){
@@ -265,7 +266,7 @@ module.exports = function(app, models){
                     questionID : qid,
                     count: count,
                 };
-                app.pusher.trigger('presentation_channel_'+qid, 'question_stats_event', message);
+                app.pusher.trigger('presentation_channel_'+presentationID, 'question_stats_event', message);
                 res.send(message);
             }else{
                 console.log(err);
