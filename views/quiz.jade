@@ -89,8 +89,9 @@ html
                 li(class = "question", key="#{q._id}") 
                     span #{q.title}  
                     br
+                    a(href="presentations/#{presentationID}/questions/#{q._id}/show_stats") show stats
+                    br
                     span #{q.answer}
                     each s in q.selections
                         p #{s}
-                            a(href="presentations/#{presentationID}/questions/#{q._id}/show_stats") show stats
                         br
