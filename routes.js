@@ -127,15 +127,6 @@ module.exports = function(app, models){
         });
     });
 
-    app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
-        var pid = req.params.pid;
-        var slideIndex = req.params.sindex;
-        app.pusher.trigger('presentation_channel_'+pid, 'slide_event', {
-            index : slideIndex,
-        });
-        console.log("triggered");
-    });
-
     app.post('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
         var question = new models.QuestionModel({
@@ -187,5 +178,19 @@ module.exports = function(app, models){
         app.pusher.trigger('test_channel', 'test_event', {
             message : "hello world",
         });
+        res.send("received");
+        console.log("test_event triggered");
+    });
+
+    // presentation channel
+    app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
+        var pid = req.params.pid;
+        var slideIndex = req.params.sindex;
+        app.pusher.trigger('presentation_channel_'+pid, 'slide_event', {
+            index : slideIndex,
+            ctime : new Date(),
+        });
+        res.send("received");
+        console.log("triggered");
     });
 }
