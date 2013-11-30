@@ -1,0 +1,95 @@
+!!!
+html
+    head
+        title Ideadlistic Vision
+        style.
+            ul{
+                list-style-type: none;
+            }
+            li{
+                list-style-type: none;
+            }
+            .question{
+                border: 1px black solid;
+                margin: 5px;
+            }
+        script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+        script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
+        script(type = "text/javascript")
+            var current_index = 0;
+            var start = 0;
+            var presentationID = "#{presentationID}";
+            var end = #{questions.length};
+            function show_slide(index){
+                if (index < end && index >= start){
+                    $.ajax({
+                        url: '/presentations/'+presentationID+'/show/moveto/'+current_index,
+                        type: 'GET',
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    });
+                }
+            }
+            $(function(){
+                $("#next_btn").click(function(){
+                    if (current_index < end-1){
+                        current_index ++;
+                        show_slide(current_index);
+                        $("#current_index").text(current_index);
+                    }
+                });
+
+                $("#prev_btn").click(function(){
+                    if (current_index > 0){
+                        current_index --;
+                        $("#current_index").text(current_index);
+                        show_slide(current_index);
+                    }
+                });
+
+                $("#start_quiz_btn").click(function(){
+                    show_slide(0);
+                });
+
+                $("#start_btn").click(function (){
+                    $.ajax({
+                        url: '/presentations/'+presentationID+'/activate/'+current_index,
+                        type: 'GET',
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    }); 
+                });
+
+                $("#stop_btn").click(function (){
+                    $.ajax({
+                        url: '/presentations/'+presentationID+'/deactivate/'+current_index,
+                        type: 'GET',
+                        success: function(result) {
+                            console.log(result);
+                        }
+                    }); 
+                });
+            });
+    body
+        h4 current question:
+        a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
+        br
+        div(id = "current_index") 0
+        a(id = "next_btn", href = "javascript:void(0);") next
+        br
+        a(id = "prev_btn", href = "javascript:void(0);") prev
+        br
+        a(id = "start_btn", href = "javascript:void(0);") start_timer
+        br
+        a(id = "stop_btn", href = "javascript:void(0);") stop_timer
+        ul
+            each q in questions
+                li(class = "question", key="#{q._id}") 
+                    span #{q.title}  
+                    br
+                    span #{q.answer}
+                    each s in q.selections
+                        p #{s}
+                        br

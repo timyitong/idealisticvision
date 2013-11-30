@@ -35,4 +35,4 @@ html
         ul
             each p in presentations
                 li
-                    a(href = "/presentations/#{p._id}/show") #{p.title}
+                    a(href = "/presentations/#{p._id}/show/#{p.type}") #{p.title}

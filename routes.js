@@ -114,17 +114,32 @@ module.exports = function(app, models){
         });
     });
 
-    app.get('/presentations/:pid/show', function (req, res){
+    app.get('/presentations/:pid/show/:ptype', function (req, res){
         var pid = req.params.pid;
-        models.SlideModel.find({presentationID: ObjectId(pid)},
-        function (err, slides){
-            if (!err){
-                res.render("presentation.jade", {presentationID: pid, slides: slides});
-            }else{
-                console.log(err);
-                res.send("error");
-            }
-        });
+        var ptype = req.params.ptype;
+        if (ptype == 'slide'){
+            models.SlideModel.find({presentationID: ObjectId(pid)},
+            function (err, slides){
+                if (!err){
+                    res.render("presentation.jade", {presentationID: pid, slides: slides});
+                }else{
+                    console.log(err);
+                    res.send("error");
+                }
+            });
+        }else if (ptype == 'quiz'){
+            models.QuestionModel.find({presentationID: ObjectId(pid)},
+            function (err, questions){
+                if (!err){
+                    res.render("quiz.jade", {presentationID: pid, questions: questions});
+                }else{
+                    console.log(err);
+                    res.send("error");
+                }
+            });
+        }else{
+            res.send("not found");
+        }
     });
 
     app.post('/questions/:presentationID', function(req, res){
