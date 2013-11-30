@@ -261,10 +261,12 @@ module.exports = function(app, models){
                     }
                     count[0] += 1;
                 }
-                app.pusher.trigger('presentation_channel_'+qid, 'question_stats_event', {
+                var message = {
                     questionID : qid,
                     count: count,
-                });
+                };
+                app.pusher.trigger('presentation_channel_'+qid, 'question_stats_event', message);
+                res.send(message);
             }else{
                 console.log(err);
                 res.send("error");
