@@ -186,8 +186,8 @@ module.exports = function(app, models){
 
     // Test Redis
     app.get('/test_redis', function (req, res){
-        client.mset("a", 100, "b", 200, app.redis.print);
-        client.mget("a", "b", function(err, replies){
+        app.redis_client.mset("a", 100, "b", 200, app.redis.print);
+        app.redis_client.mget("a", "b", function(err, replies){
             if (err){
                 console.log(err);
                 res.send("error");
@@ -225,8 +225,7 @@ module.exports = function(app, models){
         app.pusher.trigger('presentation_channel_'+pid, 'slide_status_event', {
             active : false,
             index : sindex,
-            ctime : new Date().
-        });
+            ctime : new Date()});
     });
 
     app.get('/presentations/:pid/statistics/:sindex', function (req, res){
