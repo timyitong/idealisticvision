@@ -232,6 +232,7 @@ module.exports = function(app, models){
             index : sindex,
             ctime : new Date(),
         });
+        res.send("sent");
     });
 
     app.get('/presentations/:pid/deactivate/:sindex', function (req, res){
@@ -240,7 +241,9 @@ module.exports = function(app, models){
         app.pusher.trigger('presentation_channel_'+pid, 'slide_status_event', {
             active : false,
             index : sindex,
-            ctime : new Date()});
+            ctime : new Date()}
+        );
+        res.send("sent");
     });
 
     app.get('/questions/:qid/show_stats', function (req, res){
