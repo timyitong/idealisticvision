@@ -263,6 +263,11 @@ module.exports = function(app, models){
                     }
                     count[0] += 1;
                 }
+                for (var i = 0; i < count.length; i++){
+                    if (count[i] == undefined){
+                        count[i] = 0;
+                    }
+                }
                 var message = {
                     questionID : qid,
                     count: count,
