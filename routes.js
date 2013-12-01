@@ -276,12 +276,12 @@ module.exports = function(app, models){
         });
     });
 
-    app.post('/presentations/:presentationID/commments', function (req, res){
+    app.post('/presentations/:presentationID/comments', function (req, res){
         var pid = req.params.presentationID;
         var uid = req.body.uid;
-        var text = req.body.text;
+        var text = req.body.comment;
         var ans = new models.CommentModel({
-            presentationID: pid,
+            presentationID: ObjectId(pid),
             userID: uid,
             text: text,
         });

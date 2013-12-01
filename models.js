@@ -49,7 +49,7 @@ module.exports = function(mongoose){
         slideID: ObjectId,
         questionID: ObjectId,
         selection: Number,
-        userID: ObjectId,
+        userID: String,
         ctime: {type:Date, default:Date.now}
     });
     this.AnswerModel = mongoose.model('Answer', Answer);
@@ -57,7 +57,7 @@ module.exports = function(mongoose){
 // Comment:
     var Comment = new Schema({
         presentationID: ObjectId,
-        userID: ObjectId,
+        userID: String,
         text: String,
         ctime: {type: Date, default: Date.now},
     });
