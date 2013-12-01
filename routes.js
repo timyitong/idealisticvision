@@ -263,6 +263,11 @@ module.exports = function(app, models){
                     }
                     count[0] += 1;
                 }
+                for (var i = 0; i < count.length; i++){
+                    if (count[i] == undefined){
+                        count[i] = 0;
+                    }
+                }
                 var message = {
                     questionID : qid,
                     count: count,
@@ -291,7 +296,7 @@ module.exports = function(app, models){
             presentationID: pid,
             text: text,
         };
-        app.pusher.trigger('presentation_comment-channel_'+presentationID, 'comment_event', message);
+        app.pusher.trigger('presentation_comment-channel_'+pid, 'comment_event', message);
         res.send("received");
     });
 }
