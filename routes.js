@@ -246,19 +246,20 @@ module.exports = function(app, models){
         res.send("sent");
     });
 
-    app.get('presentations/:presentationID/questions/:qid/show_stats', function (req, res){
+    app.get('/presentations/:presentationID/questions/:qid/show_stats', function (req, res){
         var presentationID = req.params.presentationID;
         var qid = req.params.qid;
         models.AnswerModel.find({questionID: qid}, function(err, answers){
             if (!err){
-                count = {};
+                count = [];
                 count[0] = 0;
                 for (var i = 0; i < answers.length; i++){
                     var ans = answers[i];
+                    var key = ans.selection;
                     if (ans.selection in count){
-                        count[ans.selection] += 1;
+                        count[key] += 1;
                     }else{
-                        count[ans.selection] = 1;
+                        count[key] = 1;
                     }
                     count[0] += 1;
                 }
