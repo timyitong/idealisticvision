@@ -291,7 +291,7 @@ module.exports = function(app, models){
             presentationID: pid,
             text: text,
         };
-        app.pusher.trigger('presentation_comment-channel_'+presentationID, 'comment_event', message);
+        app.pusher.trigger('presentation_comment-channel_'+pid, 'comment_event', message);
         res.send("received");
     });
 }
