@@ -275,4 +275,23 @@ module.exports = function(app, models){
             }
         });
     });
+
+    app.post('/presentations/:presentationID/commments', function (req, res){
+        var pid = req.params.presentationID;
+        var uid = req.body.uid;
+        var text = req.body.text;
+        var ans = new models.CommentModel({
+            presentationID: pid,
+            userID: uid,
+            text: text,
+        });
+        ans.save();
+        var message = {
+            userID: uid,
+            presentationID: pid,
+            text: text,
+        };
+        app.pusher.trigger('presentation_comment-channel_'+presentationID, 'comment_event', message);
+        res.send("received");
+    });
 }

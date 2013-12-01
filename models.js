@@ -51,8 +51,17 @@ module.exports = function(mongoose){
         selection: Number,
         userID: ObjectId,
         ctime: {type:Date, default:Date.now}
-    })
+    });
     this.AnswerModel = mongoose.model('Answer', Answer);
+
+// Comment:
+    var Comment = new Schema({
+        presentationID: ObjectId,
+        userID: ObjectId,
+        text: String,
+        ctime: {type: Date, default: Date.now},
+    });
+    this.CommentModel = mongoose.model('Comment', Comment);
 
 // End of this file
     return this;
