@@ -176,7 +176,8 @@ module.exports = function(app, models){
             userID: req.body.uid,
         });
         ans.save();
-        res.send("success");
+        console.log("post answer:"+selectedNum);
+        res.send({response:"success"});
     });
 
     app.get('/answers/:presentationID', function (req, res){
