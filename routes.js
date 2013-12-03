@@ -217,6 +217,11 @@ module.exports = function(app, models){
     app.get('/presentations/:pid/show/moveto/:sindex', function (req, res){
         var pid = req.params.pid;
         var slideIndex = req.params.sindex;
+        PresentationModel.findOne({_id: ObjectId(pid)}, function (err, presentation){
+            presentation.status = slideIndex;
+            presentation.save();
+        });
+
         app.pusher.trigger('presentation_channel_'+pid, 'slide_event', {
             index : slideIndex,
             ctime : new Date(),

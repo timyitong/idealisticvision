@@ -16,6 +16,7 @@ module.exports = function(mongoose){
         title:   String,
         type: String,
         content: String,
+        status: {type: Number, default: -1},
         ctime: {type: Date, default: Date.now}
     });
     this.PresentationModel = mongoose.model('Presentation', Presentation);

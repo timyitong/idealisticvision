@@ -52,6 +52,10 @@ html
                     show_slide(0);
                 });
 
+                $('#quit_quiz_btn').click(function(){
+                    show_slide(-1);
+                });
+
                 $("#start_btn").click(function (){
                     $.ajax({
                         url: '/presentations/'+presentationID+'/activate/'+current_index,
@@ -75,6 +79,8 @@ html
     body
         h4 current question:
         a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
+        br
+        a(id="quit_quiz_btn", herf="javascript:void(0);") quit_quiz
         br
         div(id = "current_index") 0
         a(id = "next_btn", href = "javascript:void(0);") next
