@@ -23,7 +23,12 @@ The server is deloyed at <a ref="http://106.187.92.216:9898">http://106.187.92.2
 | channel         | Event | Data           | Usage |
 | ------------- |:------|:-------------| ------------|
 | test\_channel          | test\_event    | {message}            |    test           |
-| presentation\_channel\_[:pid] | slide_event| {index}  | Move slide to the given index
+| presentation\_channel\_[:pid] | slide_event| {index}  | Move slide to the given index|
+| presentation\_channel\_[:pid] | slide_status_event| {index, active, ctime}  | Indicate whether the current presentation is active and on which page if it is really active|
+| presentation\_channel\_[:pid] | question_stats_event| {questionID, count:[ ]}  | Give feedback and statistics information about a question|
+| presentation\_channel\_[:pid] | comment_event| {userID, presenatationID, text}  | Push comments to chat roomt|
+
+
 
 <strong> Deploy: </strong> <br>
 <pre>
