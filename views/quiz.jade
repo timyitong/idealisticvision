@@ -31,6 +31,16 @@ html
                     });
                 }
             }
+            function quit_presentation(){
+                $.ajax({
+                    url: '/presentations/'+presentationID+'/show/moveto/-1',
+                    type: 'GET',
+                    success: function(result){
+                        console.log(result);
+                    }
+                });
+            }
+
             $(function(){
                 $("#next_btn").click(function(){
                     if (current_index < end-1){
@@ -53,7 +63,7 @@ html
                 });
 
                 $('#quit_quiz_btn').click(function(){
-                    show_slide(-1);
+                    quit_presentation();
                 });
 
                 $("#start_btn").click(function (){
@@ -80,7 +90,7 @@ html
         h4 current question:
         a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
         br
-        a(id="quit_quiz_btn", herf="javascript:void(0);") quit_quiz
+        a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
         br
         div(id = "current_index") 0
         a(id = "next_btn", href = "javascript:void(0);") next
