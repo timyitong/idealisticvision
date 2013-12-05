@@ -51,7 +51,7 @@ module.exports = function(mongoose){
         questionID: ObjectId,
         selection: Number,
         userID: String,
-        ctime: {type:Date, default:Date.now}
+        ctime: {type:Date, default: Date.now}
     });
     this.AnswerModel = mongoose.model('Answer', Answer);
 

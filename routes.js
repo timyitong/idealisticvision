@@ -202,8 +202,8 @@ module.exports = function(app, models){
 
     // Test Redis
     app.get('/test_redis', function (req, res){
-        app.redis_client.mset("a", 100, "b", 200, app.redis.print);
-        app.redis_client.mget("a", "b", function(err, replies){
+        app.redis_client.mset("aaaa", 100, "b", 200, app.redis.print);
+        app.redis_client.mget("a*", "b", function(err, replies){
             if (err){
                 console.log(err);
                 res.send("error");
