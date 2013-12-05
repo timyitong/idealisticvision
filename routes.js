@@ -208,6 +208,9 @@ module.exports = function(app, models){
                 console.log(err);
                 res.send("error");
             }else{
+                replies.forEach(function (reply, i) {
+                    console.log("    " + i + ": " + reply);
+                });
                 res.send(replies);
             }
         });
