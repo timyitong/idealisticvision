@@ -170,8 +170,9 @@ module.exports = function(app, models){
 
     app.post('/answers', function (req, res){
         var selectedNum = req.body.selectedNum;
+        var questionID = req.body.questionID;
         var ans = new models.AnswerModel({
-            questionID: ObjectId(req.body.questionID),
+            questionID: ObjectId(questionID),
             selection: req.body.selectedNum,
             userID: req.body.uid,
         });
@@ -242,7 +243,7 @@ module.exports = function(app, models){
                 }else{
                     for (var i = 0; i < questions.length; i++){
                         var h = questions[i]._id+"-";
-                        for (var j = 0; j <= questions.selections.length; j++){
+                        for (var j = 0; questions.selections && j <= questions.selections.length; j++){
                             app.redis_client.set(h+j, null);
                         }
                     }
