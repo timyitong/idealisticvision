@@ -176,6 +176,10 @@ module.exports = function(app, models){
             userID: req.body.uid,
         });
         ans.save();
+        var key = questionID+"-"+selection;
+        var tkey = questionID+"-0";
+        app.redis_client.incr(key);
+        app.redis_client.incr(tkey);
         console.log("post answer:"+selectedNum);
         res.send({response:"success"});
     });
@@ -226,6 +230,23 @@ module.exports = function(app, models){
             index : slideIndex,
             ctime : new Date(),
         });
+
+        // Clean record if close quiz:
+        if (slideIndex == -1){
+            models.QuestionModel.find({presentationID: ObjectId(pid)}, function(err, questions){
+                if (err){
+                    console.log(err);
+                }else{
+                    for (var i = 0; i < questions.length; i++){
+                        var h = questions[i]._id+"-";
+                        for (var j = 0; j <= questions.selections.length; j++){
+                            app.redis_client.set(h+j, null);
+                        }
+                    }
+                }
+            });
+        }
+
         res.send("received");
         console.log("triggered");
     });
@@ -249,30 +270,26 @@ module.exports = function(app, models){
             index : sindex,
             ctime : new Date()}
         );
+        models.QuestionModel.find({presentationID: ObjectId(pid)})
         res.send("sent");
     });
 
-    app.get('/presentations/:presentationID/questions/:qid/show_stats', function (req, res){
+    app.get('/presentations/:presentationID/questions/:qid/show_dynamic_stats', function (req, res){
         var presentationID = req.params.presentationID;
         var qid = req.params.qid;
-        models.AnswerModel.find({questionID: qid}, function(err, answers){
-            if (!err){
+        app.redis_client.keys(qid+"-*", function(err, replies){
+            if (err){
+                console.log(err);
+                res.send("error");
+            }else{
                 count = [];
-                count[0] = 0;
-                for (var i = 0; i < answers.length; i++){
-                    var ans = answers[i];
-                    var key = ans.selection;
-                    if (ans.selection in count){
-                        count[key] += 1;
-                    }else{
-                        count[key] = 1;
-                    }
-                    count[0] += 1;
-                }
-                for (var i = 0; i < count.length; i++){
-                    if (count[i] == undefined){
-                        count[i] = 0;
-                    }
+                var multi = app.redis_client.multi();
+                for (var i = 0; i < replies.count; i++){
+                    var key = replies[i];
+                    var head = qid+"-";
+                    var selection = key.substr(head.length, key.length-head.length);
+                    console.log("get selection:"+selection);
+                    count[selection] = app.redis_client.get(key);
                 }
                 var message = {
                     questionID : qid,
@@ -280,11 +297,43 @@ module.exports = function(app, models){
                 };
                 app.pusher.trigger('presentation_channel_'+presentationID, 'question_stats_event', message);
                 res.send(message);
-            }else{
-                console.log(err);
-                res.send("error");
             }
         });
+    });
+
+    app.get('/presentations/:presentationID/questions/:qid/show_stats', function (req, res){
+            var presentationID = req.params.presentationID;
+            var qid = req.params.qid;
+            models.AnswerModel.find({questionID: qid}, function(err, answers){
+                if (!err){
+                    count = [];
+                    count[0] = 0;
+                    for (var i = 0; i < answers.length; i++){
+                        var ans = answers[i];
+                        var key = ans.selection;
+                        if (ans.selection in count){
+                            count[key] += 1;
+                        }else{
+                            count[key] = 1;
+                        }
+                        count[0] += 1;
+                    }
+                    for (var i = 0; i < count.length; i++){
+                        if (count[i] == undefined){
+                            count[i] = 0;
+                        }
+                    }
+                    var message = {
+                        questionID : qid,
+                        count: count,
+                    };
+                    app.pusher.trigger('presentation_channel_'+presentationID, 'question_stats_event', message);
+                    res.send(message);
+                }else{
+                    console.log(err);
+                    res.send("error");
+                }
+            });
     });
 
     app.post('/presentations/:presentationID/comments', function (req, res){
