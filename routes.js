@@ -181,6 +181,8 @@ module.exports = function(app, models){
         var tkey = questionID+"-0";
         app.redis_client.incr(key);
         app.redis_client.incr(tkey);
+        console.log(app.redis.redis_client.get(key));
+        console.log(app.redis.redis_client.get(tkey));
         console.log("post answer:"+selectedNum);
         res.send({response:"success"});
     });
@@ -284,7 +286,7 @@ module.exports = function(app, models){
                 res.send("error");
             }else{
                 count = [];
-                var multi = app.redis_client.multi();
+                console.log("get all keys:"+replies);
                 for (var i = 0; i < replies.count; i++){
                     var key = replies[i];
                     var head = qid+"-";
