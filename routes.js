@@ -177,7 +177,7 @@ module.exports = function(app, models){
             userID: req.body.uid,
         });
         ans.save();
-        var key = questionID+"-"+selection;
+        var key = questionID+"-"+selectedNum;
         var tkey = questionID+"-0";
         app.redis_client.incr(key);
         app.redis_client.incr(tkey);
