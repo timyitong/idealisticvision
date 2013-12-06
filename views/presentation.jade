@@ -12,6 +12,7 @@ html
             .slide{
                 border: 1px black solid;
                 margin: 10px;
+                padding: 5px;
             }
         link(href = "/css/main.css", rel="stylesheet", type="text/css")
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
@@ -54,8 +55,8 @@ html
         div#main
             div.head Control Panel
             div.line
-                span Current Slide:
-                div(id = "current_index", style="margin-right:20px;") 0
+                span(style="float:left;") Current Slide:
+                div(id = "current_index", style="margin-right:20px; float:left;") 0
             div.line
                 a(id = "next_btn", href = "javascript:void(0);") next
                 a(id = "prev_btn", href = "javascript:void(0);") prev
