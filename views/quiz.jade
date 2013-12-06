@@ -90,18 +90,21 @@ html
     body
         div#main
             h4 current question:
-            a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
-            br
-            a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
-            br
-            div(id = "current_index") 0
-            a(id = "next_btn", href = "javascript:void(0);") next
-            br
-            a(id = "prev_btn", href = "javascript:void(0);") prev
-            br
-            a(id = "start_btn", href = "javascript:void(0);") start_timer
-            br
-            a(id = "stop_btn", href = "javascript:void(0);") stop_timer
+            div.line
+                a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
+            div.line
+                a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
+            div.line
+                strong Current Quiz #:
+                span(id = "current_index") 0
+            div.line
+                a(id = "next_btn", href = "javascript:void(0);") next
+            div.line
+                a(id = "prev_btn", href = "javascript:void(0);") prev
+            div.line
+                a(id = "start_btn", href = "javascript:void(0);") start_timer
+            div.line
+                a(id = "stop_btn", href = "javascript:void(0);") stop_timer
             ul
                 each q in questions
                     li(class = "question", key="#{q._id}") 
