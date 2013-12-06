@@ -52,11 +52,13 @@ html
             });
     body
         div#main
-            h4 Current Slide:
-            strong Current Slide:
-            div(id = "current_index", style="margin-right:20px;") 0
-            a(id = "next_btn", href = "javascript:void(0);") next
-            a(id = "prev_btn", href = "javascript:void(0);") prev
+            div.head Control Panel
+            div.line
+                span Current Slide:
+                div(id = "current_index", style="margin-right:20px;") 0
+                a(id = "next_btn", href = "javascript:void(0);") next
+                a(id = "prev_btn", href = "javascript:void(0);") prev
+            div.head Slides
             ul
                 each slide in slides
                     li(class = "slide") 
