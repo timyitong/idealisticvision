@@ -90,7 +90,6 @@ html
             });
     body
         div#main
-            h4 current question:
             div.line
                 a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
                 a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
@@ -114,6 +113,6 @@ html
                             br
                             strong(style="margin-right: 20px;") Correct Answer: 
                             span #{q.answer}
-                            each s in q.selections
-                                p #{s}
+                            each s, i in q.selections
+                                p(style="margin-left: 20px;") choice#{i}: #{s}
                                 br
