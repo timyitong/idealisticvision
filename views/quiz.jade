@@ -13,7 +13,7 @@ html
                 border: 1px black solid;
                 margin: 5px;
             }
-        style(src = "/css/main.css")
+        style(src = "/css/main.css", type="text/css")
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
         script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
         script(type = "text/javascript")
@@ -88,29 +88,30 @@ html
                 });
             });
     body
-        h4 current question:
-        a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
-        br
-        a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
-        br
-        div(id = "current_index") 0
-        a(id = "next_btn", href = "javascript:void(0);") next
-        br
-        a(id = "prev_btn", href = "javascript:void(0);") prev
-        br
-        a(id = "start_btn", href = "javascript:void(0);") start_timer
-        br
-        a(id = "stop_btn", href = "javascript:void(0);") stop_timer
-        ul
-            each q in questions
-                li(class = "question", key="#{q._id}") 
-                    span #{q.title}  
-                    br
-                    a(href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
-                    br
-                    a(href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
-                    br
-                    span #{q.answer}
-                    each s in q.selections
-                        p #{s}
+        div#main
+            h4 current question:
+            a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
+            br
+            a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
+            br
+            div(id = "current_index") 0
+            a(id = "next_btn", href = "javascript:void(0);") next
+            br
+            a(id = "prev_btn", href = "javascript:void(0);") prev
+            br
+            a(id = "start_btn", href = "javascript:void(0);") start_timer
+            br
+            a(id = "stop_btn", href = "javascript:void(0);") stop_timer
+            ul
+                each q in questions
+                    li(class = "question", key="#{q._id}") 
+                        span #{q.title}  
                         br
+                        a(href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
+                        br
+                        a(href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
+                        br
+                        span #{q.answer}
+                        each s in q.selections
+                            p #{s}
+                            br

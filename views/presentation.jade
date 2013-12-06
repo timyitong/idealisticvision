@@ -13,7 +13,7 @@ html
                 border: 1px black solid;
                 margin: 5px;
             }
-        style(src = "/css/main.css")
+        style(src = "/css/main.css", type="text/css")
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
         script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
         script(type = "text/javascript")
@@ -51,13 +51,14 @@ html
                 show_slide(0);
             });
     body
-        h4 current slide:
-        div(id = "current_index") 0
-        a(id = "next_btn", href = "javascript:void(0);") next
-        br
-        a(id = "prev_btn", href = "javascript:void(0);") prev
-        ul
-            each slide in slides
-                li(class = "slide") 
-                    span #{slide.title}  
-                    p #{slide.content}      
+        div#main
+            h4 current slide:
+            div(id = "current_index") 0
+            a(id = "next_btn", href = "javascript:void(0);") next
+            br
+            a(id = "prev_btn", href = "javascript:void(0);") prev
+            ul
+                each slide in slides
+                    li(class = "slide") 
+                        span #{slide.title}  
+                        p #{slide.content}      
