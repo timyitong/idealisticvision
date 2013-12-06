@@ -92,8 +92,8 @@ html
         div#main
             div.head Control Panel
             div.line
-                a(id="start_quiz_btn", href="javascript:void(0);", target="_blank") start_quiz
-                a(id="quit_quiz_btn", href="javascript:void(0);", target="_blank") quit_quiz
+                a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
+                a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
             div.line
                 span(style="margin-right: 5px;") Current Quiz:
                 span(id = "current_index", style="margin-right: 15px;") 0
@@ -108,8 +108,8 @@ html
                     each q in questions
                         li(class = "question", key="#{q._id}") 
                             strong #{q.title}  
-                            a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
-                            a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
+                            a(target="_blank", style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
+                            a(target="_blank", style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
                             br
                             strong(style="margin-right: 20px;") Correct Answer: 
                             span #{q.answer}
