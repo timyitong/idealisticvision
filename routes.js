@@ -288,6 +288,15 @@ module.exports = function(app, models){
                 var count = [];
                 console.log("get all keys:"+replies);
                 var multi = app.redis_client.multi();
+                
+                multi.get(qid+"-0", function(err, num){
+                    if (err){
+                        console.log(err);
+                        num = 0;
+                    }
+                    count[0] = num;
+                });
+
                 for (var i = 0; i < replies.length; i++){
                     var key = replies[i];
                     var head = qid+"-";
@@ -305,6 +314,11 @@ module.exports = function(app, models){
                     if (err){
                         console.log(err);
                     }else{
+                        for (var i = 0; i < count.length; i++){
+                            if (count[i] == undefined){
+                                count[i] = 0;
+                            }
+                        }
                         var message = {
                             questionID : qid,
                             count: count,
