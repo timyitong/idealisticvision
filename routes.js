@@ -117,7 +117,7 @@ module.exports = function(app, models){
     app.get('/presentations/:pid/show/:ptype', function (req, res){
         var pid = req.params.pid;
         var ptype = req.params.ptype;
-        if (ptype == 'slide'){
+        if (ptype == 'presentation'){
             models.SlideModel.find({presentationID: ObjectId(pid)},
             function (err, slides){
                 if (!err){

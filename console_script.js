@@ -59,3 +59,8 @@ $.ajax({
 });
 // Test Get Answers
 
+db.presentations.find({type:{$exists:false}})
+
+db.presentations.find({type:{$exists:false}}).forEach(function(item){
+    db.presentation.update({_id: item._id}, {$set: { type: "presentation"}})
+})
