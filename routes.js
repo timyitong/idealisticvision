@@ -317,11 +317,6 @@ module.exports = function(app, models){
                     if (err){
                         console.log(err);
                     }else{
-                        for (var i = 0; i < count.length; i++){
-                            if (count[i] == undefined){
-                                count[i] = 0;
-                            }
-                        }
                         var message = {
                             questionID : qid,
                             count: count,
