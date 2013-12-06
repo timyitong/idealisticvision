@@ -92,29 +92,28 @@ html
             h4 current question:
             div.line
                 a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
-            div.line
                 a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
             div.line
                 strong Current Quiz #:
                 span(id = "current_index") 0
-            div.line
                 a(id = "next_btn", href = "javascript:void(0);") next
-            div.line
                 a(id = "prev_btn", href = "javascript:void(0);") prev
             div.line
                 a(id = "start_btn", href = "javascript:void(0);") start_timer
             div.line
                 a(id = "stop_btn", href = "javascript:void(0);") stop_timer
-            ul
-                each q in questions
-                    li(class = "question", key="#{q._id}") 
-                        span #{q.title}  
-                        br
-                        a(href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
-                        br
-                        a(href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
-                        br
-                        span #{q.answer}
-                        each s in q.selections
-                            p #{s}
+            div.box
+                div.head Quizes
+                ul.line
+                    each q in questions
+                        li(class = "question", key="#{q._id}") 
+                            span #{q.title}  
                             br
+                            a(href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
+                            br
+                            a(href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
+                            br
+                            span #{q.answer}
+                            each s in q.selections
+                                p #{s}
+                                br
