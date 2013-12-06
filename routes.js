@@ -240,6 +240,7 @@ module.exports = function(app, models){
                 }else{
                     for (var i = 0; i < questions.length; i++){
                         var h = questions[i]._id+"-";
+                        console.log("removing:qid-stats-"h);
                         for (var j = 0; questions.selections && j <= questions.selections.length; j++){
                             console.log("remove:"+h+j);
                             app.redis_client.del(h+j);
@@ -287,7 +288,7 @@ module.exports = function(app, models){
                 var count = [];
                 console.log("get all keys:"+replies);
                 var multi = app.redis_client.multi();
-                for (var i = 0; i < replies.count; i++){
+                for (var i = 0; i < replies.length; i++){
                     var key = replies[i];
                     var head = qid+"-";
                     var selection = key.substr(head.length, key.length-head.length);
