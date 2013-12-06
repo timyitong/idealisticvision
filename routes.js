@@ -243,7 +243,7 @@ module.exports = function(app, models){
                         console.log("removing:qid-stats-"+h);
                         for (var j = 0; questions[i].selections && j <= questions[i].selections.length; j++){
                             console.log("remove:"+h+j);
-                            app.redis_client.del(h+"-"+j);
+                            app.redis_client.del(h+j);
                         }
                     }
                 }
