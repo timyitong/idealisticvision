@@ -246,6 +246,7 @@ module.exports = function(app, models){
                     for (var i = 0; i < questions.length; i++){
                         var h = questions[i]._id+"-";
                         for (var j = 0; questions.selections && j <= questions.selections.length; j++){
+                            console.log("remove:"+h+j);
                             app.redis_client.set(h+j, null);
                         }
                     }
