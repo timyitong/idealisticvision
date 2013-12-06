@@ -14,7 +14,7 @@ module.exports = function(mongoose){
     var Presentation = new Schema({
         cid: ObjectId,
         title:   String,
-        type: String,
+        type: {type: String, default: "presentation"},
         content: String,
         status: {type: Number, default: -1},
         ctime: {type: Date, default: Date.now}
