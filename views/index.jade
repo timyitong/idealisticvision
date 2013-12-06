@@ -4,7 +4,7 @@ html
         title Ideadlistic Vision
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
         script(src = "http://js.pusher.com/2.1/pusher.min.js" type="text/javascript")
-        script(type = "text/javascript", type="text/css")
+        script(type = "text/javascript")
             $(function(){
                 Pusher.log = function(message) {
                   if (window.console && window.console.log) {
@@ -28,7 +28,7 @@ html
                     });
                 });
             });
-        style(src = "/css/main.css")
+        style(src = "/css/main.css", type="text/css")
     body
         div#main
             a(id = "test_btn_redis", href="/test_redis") test_redis
