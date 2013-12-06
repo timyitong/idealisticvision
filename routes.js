@@ -181,8 +181,6 @@ module.exports = function(app, models){
         var tkey = questionID+"-0";
         app.redis_client.incr(key);
         app.redis_client.incr(tkey);
-        console.log(app.redis.redis_client.get(key));
-        console.log(app.redis.redis_client.get(tkey));
         console.log("post answer:"+selectedNum);
         res.send({response:"success"});
     });
@@ -244,7 +242,7 @@ module.exports = function(app, models){
                         var h = questions[i]._id+"-";
                         for (var j = 0; questions.selections && j <= questions.selections.length; j++){
                             console.log("remove:"+h+j);
-                            app.redis_client.set(h+j, null);
+                            app.redis_client.del(h+j);
                         }
                     }
                 }
@@ -286,21 +284,34 @@ module.exports = function(app, models){
                 console.log(err);
                 res.send("error");
             }else{
-                count = [];
+                var count = [];
                 console.log("get all keys:"+replies);
+                var multi = app.redis_client.multi();
                 for (var i = 0; i < replies.count; i++){
                     var key = replies[i];
                     var head = qid+"-";
                     var selection = key.substr(head.length, key.length-head.length);
                     console.log("get selection:"+selection);
-                    count[selection] = app.redis_client.get(key);
+                    multi.get(key, function(err, num){
+                        if (err){
+                            console.log(err);
+                            num = 0;
+                        }
+                        count[selection] = num;
+                    });
                 }
-                var message = {
-                    questionID : qid,
-                    count: count,
-                };
-                app.pusher.trigger('presentation_channel_'+presentationID, 'question_stats_event', message);
-                res.send(message);
+                multi.exec(function(err){
+                    if (err){
+                        console.log(err);
+                    }else{
+                        var message = {
+                            questionID : qid,
+                            count: count,
+                        };
+                        app.pusher.trigger('presentation_channel_'+presentationID, 'question_stats_event', message);
+                        res.send(message);
+                    }
+                });
             }
         });
     });
