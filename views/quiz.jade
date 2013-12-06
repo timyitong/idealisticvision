@@ -11,7 +11,7 @@ html
             }
             .question{
                 border: 1px black solid;
-                margin: 5px;
+                margin: 10px;
                 padding: 5px;
             }
         link(href = "/css/main.css", rel="stylesheet", type="text/css")
@@ -95,7 +95,7 @@ html
                 a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
                 a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
             div.line
-                strong Current Quiz #:
+                strong(style="margin-right: 20px;") Current Quiz #:
                 span(id = "current_index") 0
                 a(id = "next_btn", href = "javascript:void(0);") next
                 a(id = "prev_btn", href = "javascript:void(0);") prev
@@ -112,6 +112,7 @@ html
                             a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
                             a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
                             br
+                            strong(style="margin-right: 20px;") Correct Answer: 
                             span #{q.answer}
                             each s in q.selections
                                 p #{s}
