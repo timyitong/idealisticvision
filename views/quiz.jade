@@ -90,6 +90,7 @@ html
             });
     body
         div#main
+            div.head Control Panel
             div.line
                 a(id="start_quiz_btn", href="javascript:void(0);") start_quiz
                 a(id="quit_quiz_btn", href="javascript:void(0);") quit_quiz
@@ -107,12 +108,12 @@ html
                 ul.line
                     each q in questions
                         li(class = "question", key="#{q._id}") 
-                            span #{q.title}  
+                            strong #{q.title}  
                             a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_stats") show total stats
                             a(style="float:right", href="/presentations/#{presentationID}/questions/#{q._id}/show_dynamic_stats") show stats
                             br
                             strong(style="margin-right: 20px;") Correct Answer: 
                             span #{q.answer}
                             each s, i in q.selections
-                                p(style="margin-left: 20px;") choice#{i}: #{s}
+                                p(style="margin-left: 20px;") choice #{i}: #{s}
                                 br

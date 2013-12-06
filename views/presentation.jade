@@ -11,7 +11,7 @@ html
             }
             .slide{
                 border: 1px black solid;
-                margin: 5px;
+                margin: 10px;
             }
         link(href = "/css/main.css", rel="stylesheet", type="text/css")
         script(src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
@@ -53,9 +53,9 @@ html
     body
         div#main
             h4 Current Slide:
-            div(id = "current_index") 0
+            strong Current Slide:
+            div(id = "current_index", style="margin-right:20px;") 0
             a(id = "next_btn", href = "javascript:void(0);") next
-            br
             a(id = "prev_btn", href = "javascript:void(0);") prev
             ul
                 each slide in slides
