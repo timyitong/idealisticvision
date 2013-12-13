@@ -2,13 +2,14 @@ module.exports = function(app, models){
     // Lib:
     var ObjectId = app.mongoose.Types.ObjectId;
     
-    //index:
+    // Index page
     app.get('/', function (req,res){
         models.PresentationModel.find(function (err, presentations){
             res.render("index.jade", {presentations: presentations});
         })
     });
 
+    // Log in method
     app.post('/login', function (req, res){
         if (req.body.password == '111')
             res.send("0");
@@ -16,6 +17,7 @@ module.exports = function(app, models){
             res.send("1");
     });
 
+    // Get a user's course list
     app.get('/courses/:uid', function (req, res){
         var uid = req.params.uid;
         models.CourseModel.find().exec(function(err, courses){
@@ -27,6 +29,7 @@ module.exports = function(app, models){
         }); 
     });
 
+    // Post a course, and save to database
     app.post('/courses', function (req, res){
         var course = new models.CourseModel({
             name: req.body.name
@@ -35,6 +38,7 @@ module.exports = function(app, models){
         res.send("success");
     });
 
+    // Post a presentation, and save to database
     app.post('/presentations', function (req, res){
         var presentation = new models.PresentationModel({
             title: req.body.title,
@@ -46,6 +50,7 @@ module.exports = function(app, models){
         res.send("success");
     });
 
+    // Get a presentation list given a course id
     app.get('/courses/presentations/:cid', function (req, res){
         var cid = req.params.cid;
         models.PresentationModel.find({cid: ObjectId(cid)},
@@ -58,6 +63,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Post a slide to presentation, and save to database
     app.post('/presentations/slides', function (req, res){
         var slide = new models.SlideModel({
             presentationID: ObjectId(req.body.pid),
@@ -76,6 +82,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Get slides by slide id
     app.get('/slides/:sid', function (req, res){
         var sid = req.params.sid;
         model.SlideModel.findOne({_id : ObjectId(sid)},
@@ -88,6 +95,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Get presentation by presentation id
     app.get('/presentations/:pid', function (req, res){
         var pid = req.params.pid;
         model.PresentationModel.findOne({presentationID: ObjectId(pid)},
@@ -101,6 +109,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Get all slides of a presentation
     app.get('/presentations/:pid/slides', function (req, res){
         var pid = req.params.pid;
         models.SlideModel.find({presentationID: ObjectId(pid)},
@@ -114,6 +123,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Presentation View Controller
     app.get('/presentations/:pid/show/:ptype', function (req, res){
         var pid = req.params.pid;
         var ptype = req.params.ptype;
@@ -142,6 +152,7 @@ module.exports = function(app, models){
         }
     });
 
+    // Post a question to a presentation
     app.post('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
         var question = new models.QuestionModel({
@@ -156,6 +167,7 @@ module.exports = function(app, models){
         res.send("success");
     });
 
+    // Get all questions linked to a presentation
     app.get('/questions/:presentationID', function(req, res){
         var pid = req.params.presentationID;
         models.QuestionModel.find({presentationID: ObjectId(pid)}).sort("index")
@@ -168,6 +180,7 @@ module.exports = function(app, models){
         });
     });
 
+    // Post an answer to a question
     app.post('/answers', function (req, res){
         var selectedNum = req.body.selectedNum;
         var questionID = req.body.questionID;
@@ -185,6 +198,7 @@ module.exports = function(app, models){
         res.send({response:"success"});
     });
 
+    // Get all answers for a presentation
     app.get('/answers/:presentationID', function (req, res){
         var pid = req.params.presentationID;
         models.AnswerModel.find({presentationID: ObjectId(pid)}, function(err, answers){
@@ -257,6 +271,7 @@ module.exports = function(app, models){
         console.log("triggered");
     });
 
+    // Activate presentation channel
     app.get('/presentations/:pid/activate/:sindex', function (req, res){
         var pid = req.params.pid;
         var sindex = req.params.sindex;
@@ -268,6 +283,7 @@ module.exports = function(app, models){
         res.send("sent");
     });
 
+    // Deactivate presentation channel
     app.get('/presentations/:pid/deactivate/:sindex', function (req, res){
         var pid = req.params.pid;
         var sindex = req.params.sindex;
@@ -280,9 +296,13 @@ module.exports = function(app, models){
         res.send("sent");
     });
 
+    // Show temporarial question answering statistics for a question
     app.get('/presentations/:presentationID/questions/:qid/show_dynamic_stats', function (req, res){
         var presentationID = req.params.presentationID;
         var qid = req.params.qid;
+        
+        // Query all keys that matched with current question id
+        // and iterate over all of them
         app.redis_client.keys(qid+"-*", function(err, replies){
             if (err){
                 console.log(err);
@@ -290,8 +310,13 @@ module.exports = function(app, models){
             }else{
                 var count = [];
                 console.log("get all keys:"+replies);
+                
+                // Declare an agent for carrying out mutliple tasks
+                // all tasks submitted to this agent, won't start running
+                // until multi.exec() is called
                 var multi = app.redis_client.multi();
                 
+                // Query for total people participated
                 multi.get(qid+"-0", function(err, num){
                     if (err){
                         console.log(err);
@@ -300,6 +325,7 @@ module.exports = function(app, models){
                     count[0] = num;
                 });
 
+                // Read answers counting stats for different questions
                 for (var i = 0; i < replies.length; i++){
                     var key = replies[i];
                     var head = qid+"-";
@@ -313,6 +339,8 @@ module.exports = function(app, models){
                         count[selection] = num;
                     });
                 }
+
+                // Submit multi and define call back function
                 multi.exec(function(err){
                     if (err){
                         console.log(err);
@@ -329,6 +357,8 @@ module.exports = function(app, models){
         });
     });
 
+    // Query from database and return the overall answering stats
+    //  for a given question
     app.get('/presentations/:presentationID/questions/:qid/show_stats', function (req, res){
             var presentationID = req.params.presentationID;
             var qid = req.params.qid;
@@ -364,6 +394,8 @@ module.exports = function(app, models){
             });
     });
 
+    // Post a comment to a certain channel, which is bineded 
+    // with presentation_id
     app.post('/presentations/:presentationID/comments', function (req, res){
         var pid = req.params.presentationID;
         var uid = req.body.uid;

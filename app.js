@@ -9,12 +9,15 @@ app.__SITE__="http://localhost:3000"
 app.path = require("path")
 app.mongoose = require("mongoose")
 app.moment = require('moment')
+
+// Redis setup
 app.redis = require('redis');
 app.redis_client = app.redis.createClient();
 app.redis_client.on("error", function (err) {
         console.log("Error " + err);
 });
 
+// Puser API setup
 var Pusher = require('pusher');
 app.pusher = new Pusher({
   appId: '57457',
@@ -22,6 +25,7 @@ app.pusher = new Pusher({
   secret: '3ae7459db7282cc4c6cf'
 });
 
+// Moment setip
 app.moment.relativeTime={
     future: "in %s",
     past: "%s ago",
@@ -39,15 +43,18 @@ app.moment.relativeTime={
     yy: "%d years"
 }
 
+// Include config file
 var config=require('./config.js')(app,express,everyauth);
 
+// Include constants file
 var constants = require("./constants");
 
+// Include models file
 var models = require("./models")(app.mongoose);
 
+// Include the controller file
 require('./routes')(app, models);
 
-require("./channels")(app, models);
-
+// Start server
 app.listen(9898);
 console.log("Listening on port 9898");
